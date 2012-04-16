@@ -1,0 +1,10 @@
+<VidaliaPlugin>
+  <name>Bandwidth history</name>
+  <date>16/04/2012</date>
+  <author>chiiph</author>
+  <type persistent="true" gui="true" />
+  <files>
+    <file>tutorial.js</file>
+  </files>
+  <namespace>tutorial</namespace>
+</VidaliaPlugin>
