@@ -260,11 +260,17 @@ var tbb = {
         if(!torControl.isConnected())
             return;
 
-        while(!torControl.isCircuitEstablished()) {
+        while(torControl.isRunning() &&
+              torControl.isConnected() &&
+              !torControl.isCircuitEstablished()) {
             vdebug("Waiting on circuit established");
             //sleep(1); // sleep 1s
             QCoreApplication.processEvents();
         }
+
+        if(!torControl.isRunning() ||
+           !torControl.isConnected())
+            return;
 
         var proxyExecutable = this.tab.getSetting(this.ProxyExecutable, "");
         var runAtStart = this.tab.getSetting(this.RunProxyAtStart, "");
