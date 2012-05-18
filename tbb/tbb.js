@@ -42,7 +42,11 @@ var tbb = {
         // Load the GUI file
         this.tab = new VidaliaTab("Browser Bundle Settings", "TBB");
 
-        var file = new QFile(pluginPath+"/tbb/tbb.ui");
+        var uiPath = pluginPath+"/tbb/tbb.ui";
+        if((new QDir(uiPath)).isRelative())
+            uiPath = QCoreApplication.applicationDirPath()+"/"+uiPath;
+
+        var file = new QFile(uiPath);
         var loader = new QUiLoader(this.tab);
         file.open(QIODevice.ReadOnly);
         this.widget = loader.load(file);
@@ -205,7 +209,7 @@ var tbb = {
         vdebug("TBB@launchBrowserFromDirectory");
         /** Directory for the browser */
         var browserDirectory = this.tab.getSetting(this.BrowserDirectory, "");
-        if(QDir(browserDirectory).isRelative())
+        if(new QDir(browserDirectory).isRelative())
             browserDirectory = QDir.toNativeSeparators(QCoreApplication.applicationDirPath()
                                                        + "/" + browserDirectory);
 
@@ -223,7 +227,7 @@ var tbb = {
         /** Relative path to the default plugins directory from the browserDirectory */
         var defaultPluginsDirectory = QDir.toNativeSeparators(this.tab.getSetting(this.DefaultPluginsDirectory, ""));
 
-        var profileDir = browserDirectory + "/" + profileDirectory;
+        var profileDir = (new QDir(browserDirectory + "/" + profileDirectory)).canonicalPath();
 
         this.browserProcess.setEnvironment(this.updateBrowserEnv());
 
@@ -232,22 +236,22 @@ var tbb = {
         /* Copy the profile directory if it's not already there */
         if (!browserDirObj.exists(profileDirectory)) {
             browserDirObj.mkdir(profileDirectory);
-            this.copy_dir(browserDirectory + "/" + defaultProfileDirectory,
-                     browserDirectory + "/" + profileDirectory);
+            this.copy_dir((new QDir(browserDirectory + "/" + defaultProfileDirectory)).canonicalPath(),
+                          (new QDir(browserDirectory + "/" + profileDirectory)).canonicalPath());
         }
 
         /* Copy the plugins directory if it's not already there */
         if (!browserDirObj.exists(pluginsDirectory)) {
             browserDirObj.mkdir(pluginsDirectory);
-            this.copy_dir(browserDirectory + "/" + defaultPluginsDirectory,
-                          browserDirectory + "/" + pluginsDirectory);
+            this.copy_dir((new QDir(browserDirectory + "/" + defaultPluginsDirectory)).canonicalPath(),
+                          (new QDir(browserDirectory + "/" + pluginsDirectory)).canonicalPath());
         }
 
         /* Build the command line arguments */
         /* Is this better or worse than MOZ_NO_REMOTE? */
         var commandLine = "-no-remote ";
-        commandLine += "-profile ";
-        commandLine += profileDir;
+        commandLine += "-profile";
+        commandLine += "\"" + profileDir + "\"";
 
         /* Launch the browser */
         this.browserProcess.start(browserExecutable, commandLine);
@@ -267,10 +271,6 @@ var tbb = {
             //sleep(1); // sleep 1s
             QCoreApplication.processEvents();
         }
-
-        if(!torControl.isRunning() ||
-           !torControl.isConnected())
-            return;
 
         var proxyExecutable = this.tab.getSetting(this.ProxyExecutable, "");
         var runAtStart = this.tab.getSetting(this.RunProxyAtStart, "");
@@ -362,7 +362,11 @@ var tbb = {
     },
 
     showCloseDialog: function() {
-        var file = new QFile(pluginPath+"/tbb/reopen.ui");
+        var uiPath = pluginPath+"/tbb/reopen.ui";
+        if((new QDir(uiPath)).isRelative())
+            uiPath = QCoreApplication.applicationDirPath()+"/"+uiPath;
+
+        var file = new QFile(uiPath);
         var loader = new QUiLoader();
         file.open(QIODevice.ReadOnly);
         var dialog = loader.load(file);
