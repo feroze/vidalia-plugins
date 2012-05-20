@@ -250,7 +250,7 @@ var tbb = {
         /* Build the command line arguments */
         /* Is this better or worse than MOZ_NO_REMOTE? */
         var commandLine = "-no-remote ";
-        commandLine += "-profile";
+        commandLine += "-profile ";
         commandLine += "\"" + profileDir + "\"";
 
         /* Launch the browser */
