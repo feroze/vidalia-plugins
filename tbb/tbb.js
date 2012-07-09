@@ -343,7 +343,7 @@ var tbb = {
     },
 
     showWaitDialog: function() {
-        if (this.chkTrayShow.checkState() == Qt.Checked) {
+        if (this.tab.getSetting("DontShowTrayBox", "false") != "true") {
             if(QSystemTrayIcon.supportsMessages()) {
                if (this.browserProcess.state() == QProcess.Running) {
                    VidaliaMainWindow.
