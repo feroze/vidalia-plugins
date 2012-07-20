@@ -56,7 +56,6 @@ var bwgraph = {
         file.open(QIODevice.ReadOnly);
         this.widget = loader.load(file);
         var layout = new QVBoxLayout(this.tab);
-        vdebug(layout);
         layout.sizeConstraint = QLayout.SetMinAndMaxSize;
         layout.addWidget(this.widget, 100, Qt.AlignCenter);
         this.tab.setLayout(layout);
@@ -112,6 +111,15 @@ var bwgraph = {
         this.frame.showRecv = (this.chkReceiveRate.checkState() == Qt.Checked);
         this.frame.showSend = (this.chkSendRate.checkState() == Qt.Checked);
         this.toggleSettings(false);
+        if(this.chkAlwaysOnTop.checkState() == Qt.Checked)
+        {
+          this.tab.setWindowFlags(Qt.WindowFlags(this.tab.windowFlags() ^ Qt.WindowStaysOnTopHint));
+          if(this.tab.visible)
+          {
+            this.tab.show();
+            this.tab.activateWindow();
+          }
+        }
     },
 
     loadSettings: function() {
@@ -127,6 +135,15 @@ var bwgraph = {
         this.cmbGraphStyle.currentIndex = this.frame.graphStyle;
         this.frame.showRecv = dorecv;
         this.frame.showSend = dosend;
+        if(this.chkAlwaysOnTop.checkState() == Qt.Checked)
+        {
+          this.tab.setWindowFlags(Qt.WindowFlags(this.tab.windowFlags() ^ Qt.WindowStaysOnTopHint));
+          if(this.tab.visible)
+          {
+            this.tab.show();
+            this.tab.activateWindow();
+          }
+        }
     },
 
     buildGUI: function() {
@@ -136,10 +153,12 @@ var bwgraph = {
 
     toggleHistory: function(toggle) {
       this.grpBandwidth.setVisible(toggle);
+      this.btnHistory.checked = toggle;
     },
 
     toggleSettings: function(toggle) {
       this.frmSettings.setVisible(toggle);
+      this.btnSettings.checked = toggle;
     },
 
     stop: function() {
