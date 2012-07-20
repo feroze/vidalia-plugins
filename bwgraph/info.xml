@@ -1,0 +1,11 @@
+<VidaliaPlugin>
+  <name>Bandwidth Graph</name>
+  <date>11/06/2012</date>
+  <author>chiiph</author>
+  <type persistent="true" gui="true" />
+  <files>
+    <file>graphframe.js</file>
+    <file>bwgraph.js</file>
+  </files>
+  <namespace>bwgraph</namespace>
+</VidaliaPlugin>
