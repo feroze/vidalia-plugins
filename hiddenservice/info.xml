@@ -5,6 +5,7 @@
   <type persistent="false" gui="true" />
   <files>
     <file>hiddenservice.js</file>
+    <file>hswidget.js</file>
   </files>
   <namespace>hiddenservice</namespace>
 </VidaliaPlugin>
