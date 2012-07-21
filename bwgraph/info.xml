@@ -8,4 +8,5 @@
     <file>bwgraph.js</file>
   </files>
   <namespace>bwgraph</namespace>
+  <icon>:/images/16x16/utilities-system-monitor.png</icon>
 </VidaliaPlugin>
