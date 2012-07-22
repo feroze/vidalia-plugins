@@ -15,16 +15,17 @@ var bwgraph = {
 
     start: function() {
         vdebug("Bwhistory@start");
-        torControl["bandwidthUpdate(quint64, quint64)"].connect(this, this.saveBandwidth);
         this.createGUI();
         this.loadSettings();
 
         this.recv = parseInt(this.tab.getSetting(this.Sent, 0));
         this.sent = parseInt(this.tab.getSetting(this.Recv, 0));
         this.from = this.tab.getSetting(this.From, "");
+        torControl.setEvent(TorEvents.Bandwidth);
 
         if(this.from.length == 0)
             this.from = QDateTime.currentDateTime().toString();
+        torControl["bandwidthUpdate(quint64, quint64)"].connect(this, this.saveBandwidth);
     },
 
     saveBandwidth: function(recv, sent) {
