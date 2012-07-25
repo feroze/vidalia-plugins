@@ -8,4 +8,5 @@
     <file>hswidget.js</file>
   </files>
   <namespace>hiddenservice</namespace>
+  <icon>:/images/16x16/preferences-system.png</icon>
 </VidaliaPlugin>
