@@ -1,0 +1,12 @@
+<VidaliaPlugin>
+  <name>Hidden Service</name>
+  <date>7/05/2012</date>
+  <author>feroze</author>
+  <type persistent="false" gui="true" />
+  <files>
+    <file>hiddenservice.js</file>
+    <file>hswidget.js</file>
+  </files>
+  <namespace>hiddenservice</namespace>
+  <icon>:/images/16x16/preferences-system.png</icon>
+</VidaliaPlugin>
