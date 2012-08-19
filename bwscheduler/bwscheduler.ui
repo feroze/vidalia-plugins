@@ -30,7 +30,7 @@
    <item row="1" column="0" colspan="6">
     <widget class="QScrollArea" name="scrollArea">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="minimumSize">
       <size>
@@ -123,7 +123,7 @@
    <item row="0" column="4">
     <widget class="QPushButton" name="btnAdd">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="minimumSize">
       <size>

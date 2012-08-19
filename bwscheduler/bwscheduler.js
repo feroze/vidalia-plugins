@@ -5,6 +5,7 @@ importExtension("qt.uitools");
 importExtension("qt.network");
 
 var bwscheduler = {
+    SETTING_ENABLED: "BandwidthSchedulerEnabled",
 
     weekDays : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
 
@@ -20,35 +21,37 @@ var bwscheduler = {
     },
 
     updateRate: function() {
-        torrc.clear(["BandwidthRate", "BandwidthBurst"]);
+        if (this.settings.value(this.SETTING_ENABLED) == "true") {
+            torrc.clear(["BandwidthRate", "BandwidthBurst"]);
 
-        var currentTime = QTime.currentTime();
-        var today = new Date()
+            var currentTime = QTime.currentTime();
+            var today = new Date()
 
-        var size = this.settings.beginReadArray("schedules");
+            var size = this.settings.beginReadArray("schedules");
 
-        for (var i = 0; i < size; i++) {
-            this.settings.setArrayIndex(i);
-            var day = this.settings.value("cmbDay");
-            var startTime = QTime.fromString(this.settings.value("timeStart"), "hh:mm");
-            var endTime = QTime.fromString(this.settings.value("timeEnd"), "hh:mm");
-            var bwRate = this.settings.value("spinRate");
-            var bwUnit = this.settings.value("cmbUnit");
+            for (var i = 0; i < size; i++) {
+                this.settings.setArrayIndex(i);
+                var day = this.settings.value("cmbDay");
+                var startTime = QTime.fromString(this.settings.value("timeStart"), "hh:mm");
+                var endTime = QTime.fromString(this.settings.value("timeEnd"), "hh:mm");
+                var bwRate = this.settings.value("spinRate");
+                var bwUnit = this.settings.value("cmbUnit");
 
-            if (startTime <= currentTime && currentTime <= endTime) {
-                if (day == "Everyday") {
-                    torrc.setValue("BandwidthRate" , bwRate + " " + bwUnit);
-                    torrc.setValue("BandwidthBurst" , bwRate + " " + bwUnit);
-                }
-                else if (day == this.weekDays[today.getDay()]) {
-                    torrc.setValue("BandwidthRate" , bwRate + " " + bwUnit);
-                    torrc.setValue("BandwidthBurst" , bwRate + " " + bwUnit);
+                if (startTime <= currentTime && currentTime <= endTime) {
+                    if (day == "Everyday") {
+                        torrc.setValue("BandwidthRate" , bwRate + " " + bwUnit);
+                        torrc.setValue("BandwidthBurst" , bwRate + " " + bwUnit);
+                    }
+                    else if (day == this.weekDays[today.getDay()]) {
+                        torrc.setValue("BandwidthRate" , bwRate + " " + bwUnit);
+                        torrc.setValue("BandwidthBurst" , bwRate + " " + bwUnit);
+                    }
                 }
             }
-        }
 
-        this.settings.endArray();
-        torrc.apply(torControl);
+            this.settings.endArray();
+            torrc.apply(torControl);
+        }
     },
 
     updateList: function() {
@@ -240,16 +243,30 @@ var bwscheduler = {
         if (this.btnDiscard == null)
             return this.tab;
 
+        this.chkEnabled['stateChanged(int)'].connect(this, this.toggleEnabled);
         this.btnAdd['clicked()'].connect(this, this.addService);
         this.btnRemove['clicked()'].connect(this, this.removeServices);
         this.btnApply['clicked()'].connect(this, this.applyServices);
         this.btnDiscard['clicked()'].connect(this, this.updateList);
+
+        this.chkEnabled.setCheckState((this.settings.value(this.SETTING_ENABLED, "false") == "true")?Qt.Checked:Qt.Unchecked);
 
         this.updateList();
 
         return this.tab;
     },
 
+    toggleEnabled: function() {
+        var enableScheduler = (this.chkEnabled.checkState() == Qt.Checked) ? true : false;
+        this.settings.setValue(this.SETTING_ENABLED, enableScheduler.toString());
+        this.scrollArea.setEnabled(enableScheduler);
+        this.btnAdd.setEnabled(enableScheduler);
+
+        if (! enableScheduler) {
+            torrc.clear(["BandwidthRate", "BandwidthBurst"]);
+            torrc.apply(torControl);
+        }
+    },
 
     stop: function() {
         vdebug("Tutorial@stop");
