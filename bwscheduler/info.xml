@@ -1,0 +1,11 @@
+<VidaliaPlugin>
+  <name>Bandwidth Scheduler</name>
+  <date>30/07/2012</date>
+  <author>feroze</author>
+  <type persistent="true" gui="true" />
+  <files>
+    <file>bwscheduler.js</file>
+  </files>
+  <namespace>bwscheduler</namespace>
+  <icon>:/images/16x16/preferences-system.png</icon>
+</VidaliaPlugin>
