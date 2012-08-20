@@ -156,7 +156,29 @@ var bwscheduler = {
 
     enableApply: function() {
         this.btnDiscard.enabled = true;
-        this.btnApply.enabled = true;
+        if (this.sanityCheck())
+            this.btnApply.enabled = true;
+        else
+            this.btnApply.enabled = false;
+    },
+
+    sanityCheck: function() {
+        for (var i = 0; i < this.customwidget.length; i++) {
+            if (this.timeStart[i].time > this.timeEnd[i].time) {
+                this.lineError[i].setText("Start Time must be lesser than End Time");
+                this.lineError[i].show();
+                return false;
+            }
+            if (this.cmbUnit[i].currentText == "KB") {
+                if (this.spinRate[i].value > 0 && this.spinRate[i].value < 25) {
+                    this.lineError[i].setText("Bandwidth Rate must be atleast 25 KB");
+                    this.lineError[i].show();
+                    return false;
+                }
+            }
+        }
+
+        return true;
     },
 
     enableRemove: function() {
